@@ -28,3 +28,22 @@ INSERT INTO estudantes (data_nascimento, regiao, possui_veiculo, ocupacao) VALUE
 ('2002-08-30', 'Cambé', 'Não', 'Estudante');
 
 select * from estudantes;
+
+-- 1. 
+SELECT * FROM estudantes
+WHERE data_nascimento IS NOT NULL AND data_nascimento > DATE_SUB(CURDATE(), INTERVAL 18 YEAR);
+-- 2. 
+SELECT * FROM estudantes
+WHERE data_nascimento IS NOT NULL AND data_nascimento <= DATE_SUB(CURDATE(), INTERVAL 18 YEAR);
+-- 3. 
+SELECT * FROM estudantes WHERE possui_veiculo = 'Sim';
+-- 4. 
+SELECT regiao FROM estudantes;
+-- 5. 
+SELECT * FROM estudantes WHERE ocupacao LIKE '%TI%';
+-- 6. 
+SELECT * FROM estudantes WHERE ocupacao + 'Estudante' AND possui_veiculo = 'Sim';
+-- 7.
+-- A maioria não tem carro, mora na região oeste, quase todos tem ocupação e tinha uma inconsistência na data (id = 2)
+--
+UPDATE estudantes SET data_nascimento = '2008-05-20' WHERE id = 2;
