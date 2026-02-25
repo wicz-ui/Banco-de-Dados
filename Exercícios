@@ -22,6 +22,8 @@ valor de venda? */
 
 SELECT codigo_do_produto, quantidade FROM itens_notas_fiscais WHERE quantidade >= 99;
 
+SELECT codigo_do_produto, quantidade, preco, (quantidade * preco) AS valor_venda FROM itens_notas_fiscais WHERE quantidade >= 99 ORDER BY valor_venda DESC;
+
 /* 5. Quem é o cliente que comprou 84 produtos com o número de código
 igual a 1101035, cujo número da nota fiscal foi 102? Quem foi o
 vendedor ou vendedora responsável e qual o nome do produto e seu
