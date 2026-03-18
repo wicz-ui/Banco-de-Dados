@@ -1,0 +1,22 @@
+select * from notas_fiscais;
+select * from itens_notas_fiscais;
+
+SELECT * FROM notas_fiscais AS NF
+JOIN itens_notas_fiscais AS INF
+	ON NF.NUMERO = INF.NUMERO;
+
+SELECT NF.CPF, NF.DATA_VENDA, INF.QUANTIDADE
+FROM notas_fiscais AS NF
+JOIN itens_notas_fiscais AS INF
+	ON NF.NUMERO = INF.NUMERO;
+
+SELECT NF.CPF, DATE_FORMAT(NF.DATA_VENDA, '%Y-%m') AS ANO_MES, INF.QUANTIDADE
+FROM notas_fiscais AS NF
+JOIN itens_notas_fiscais AS INF
+	ON NF.NUMERO = INF.NUMERO;
+
+SELECT NF.CPF, DATE_FORMAT(NF.DATA_VENDA, '%Y-%m') AS ANO_MES, SUM(INF.QUANTIDADE) AS QNTD_VENDAS
+FROM notas_fiscais AS NF
+JOIN itens_notas_fiscais AS INF
+	ON NF.NUMERO = INF.NUMERO
+GROUP BY NF.CPF, DATE_FORMAT(NF.DATA_VENDA, '%Y-%m');
