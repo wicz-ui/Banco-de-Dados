@@ -1,0 +1,170 @@
+Segue exatamente o que a atividade pede, o mais simples possível.
+
+
+---
+
+🗄️ 1) SQL (criar banco + tabela + 3 registros)
+
+CREATE DATABASE ProvaBim;
+
+USE ProvaBim;
+
+CREATE TABLE Disciplinas (
+  codDisciplina INT AUTO_INCREMENT PRIMARY KEY,
+  descricao VARCHAR(80) NOT NULL,
+  cargaHoraria VARCHAR(6),
+  nomeProfessor VARCHAR(80)
+);
+
+-- 3 registros
+INSERT INTO Disciplinas (descricao, cargaHoraria, nomeProfessor) VALUES
+("Banco de Dados", "80", "Carlos"),
+("Algoritmos", "60", "Ana"),
+("Estrutura de Dados", "100", "Marcos");
+
+
+---
+
+📦 2) Instalar
+
+npm init -y
+npm install mysql2
+
+
+---
+
+🔌 3) db.js
+
+const mysql = require("mysql2");
+
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "ProvaBim"
+});
+
+db.connect();
+
+module.exports = db;
+
+
+---
+
+📊 4) query.js (CRUD simples)
+
+const db = require("./db");
+
+// LISTAR
+function listar() {
+  db.query("SELECT * FROM Disciplinas", (err, result) => {
+    if (err) throw err;
+    console.log(result);
+  });
+}
+
+// INSERIR (atividade 02)
+function inserir() {
+  const sql = `
+    INSERT INTO Disciplinas (descricao, cargaHoraria, nomeProfessor)
+    VALUES ("Linguagem de Programação back-end", "120", "Pedro Vieira")
+  `;
+
+  db.query(sql, (err) => {
+    if (err) throw err;
+    console.log("Inserido com sucesso!");
+  });
+}
+
+// ATUALIZAR
+function atualizar() {
+  db.query(
+    'UPDATE Disciplinas SET nomeProfessor="João" WHERE codDisciplina=1',
+    (err) => {
+      if (err) throw err;
+      console.log("Atualizado!");
+    }
+  );
+}
+
+// DELETAR
+function deletar() {
+  db.query(
+    "DELETE FROM Disciplinas WHERE codDisciplina=1",
+    (err) => {
+      if (err) throw err;
+      console.log("Deletado!");
+    }
+  );
+}
+
+module.exports = { listar, inserir, atualizar, deletar };
+
+
+---
+
+🚀 5) index.js
+
+const { listar, inserir } = require("./query");
+
+// PASSO 1 → mostrar tabela
+listar();
+
+// PASSO 2 → inserir nova disciplina
+// inserir();
+
+
+---
+
+▶️ 6) Rodar
+
+node index.js
+
+
+---
+
+✅ Resultado esperado
+
+Quando rodar listar()
+
+[
+  {
+    codDisciplina: 1,
+    descricao: 'Banco de Dados',
+    cargaHoraria: '80',
+    nomeProfessor: 'Carlos'
+  },
+  ...
+]
+
+
+---
+
+Quando rodar inserir()
+
+Inserido com sucesso!
+
+Depois rode listar() novamente → vai aparecer:
+
+{
+  descricao: 'Linguagem de Programação back-end',
+  cargaHoraria: '120',
+  nomeProfessor: 'Pedro Vieira'
+}
+
+
+---
+
+🎯 O que você cumpre na prova
+
+✔ Criou database
+✔ Criou tabela com campos corretos
+✔ Inseriu 3 registros
+✔ Fez back-end em JS
+✔ Mostrou dados no VS Code
+✔ Inseriu nova disciplina via código
+
+
+---
+
+Se quiser, posso te mandar a versão EXATAMENTE no padrão que professor corrige (com entrada via teclado) — isso costuma garantir nota máxima.
