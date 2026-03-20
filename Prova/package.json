@@ -1,0 +1,14 @@
+{
+  "name": "prova",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abner",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "mysql2": "^3.20.0"
+  }
+}
