@@ -1,0 +1,12 @@
+#30/03/2026 - JSON Contains Path
+
+CREATE TABLE X (Y JSON);
+
+INSERT INTO X VALUES ('{"nome": "Roberto", "telefone": "1234-5678"}');
+INSERT INTO X VALUES ('{"nome": "Maria"}');
+INSERT INTO X VALUES ('{"nome":"Alberto", "endereco": "Rua x numero y"}');
+INSERT INTO X VALUES ('{"nome":"Leticia", "endereco": "Rua x numero y", "telefone":"1234-5678"}');
+
+SELECT Y FROM X;
+
+select json_contains_path(Y, "ONE", '$.nome') FROM X;
