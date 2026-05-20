@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema Help Desk</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+    <h1>Sistema Help Desk</h1>
+    <p>Controle de chamados técnicos</p>
+</header>
+
+<nav>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#novo-chamado">Novo Chamado</a>
+    <a href="#chamados">Chamados</a>
+    <a href="#ranking">Ranking</a>
+    <a href="#tecnicos">Técnicos</a>
+</nav>
+
+<main>
+
+    {% with mensagens = get_flashed_messages() %}
+        {% if mensagens %}
+            <div class="mensagens">
+                {% for mensagem in mensagens %}
+                    <p>{{ mensagem }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <section id="dashboard">
+        <h2>Dashboard</h2>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Total</h3>
+                <p>{{ dados_dashboard.total_chamados }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Abertos</h3>
+                <p>{{ dados_dashboard.chamados_abertos }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Finalizados</h3>
+                <p>{{ dados_dashboard.chamados_finalizados }}</p>
+            </div>
+
+            <div class="card destaque">
+                <h3>Nível Alto</h3>
+                <p>{{ dados_dashboard.chamados_altos }}</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="novo-chamado">
+        <h2>Criar Chamado</h2>
+
+        <form action="{{ url_for('criar_chamado') }}" method="POST">
+
+            <label for="equipamento">Equipamento</label>
+            <input type="text" id="equipamento" name="equipamento" placeholder="Ex: Computador, impressora, monitor">
+
+            <label for="problema">Qual o problema?</label>
+            <textarea id="problema" name="problema" placeholder="Descreva o problema encontrado"></textarea>
+
+            <label for="nivel">Nível do chamado</label>
+            <select id="nivel" name="nivel">
+                <option value="">Selecione</option>
+                <option value="Alto">Alto</option>
+                <option value="Médio">Médio</option>
+                <option value="Baixo">Baixo</option>
+            </select>
+
+            <label for="tecnico_id">Técnico responsável</label>
+            <select id="tecnico_id" name="tecnico_id">
+                <option value="">Selecione</option>
+
+                {% for tecnico in tecnicos %}
+                    <option value="{{ tecnico.id }}">{{ tecnico.nome }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Cadastrar Chamado</button>
+        </form>
+    </section>
+
+    <section id="chamados">
+        <h2>Lista de Chamados</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Equipamento</th>
+                    <th>Problema</th>
+                    <th>Nível</th>
+                    <th>Técnico</th>
+                    <th>Status</th>
+                    <th>Criado em</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for chamado in chamados %}
+                    <tr>
+                        <td>{{ chamado.id }}</td>
+                        <td>{{ chamado.equipamento }}</td>
+                        <td>{{ chamado.problema }}</td>
+                        <td>
+                            <span class="nivel {{ chamado.nivel|lower }}">
+                                {{ chamado.nivel }}
+                            </span>
+                        </td>
+                        <td>{{ chamado.tecnico_nome }}</td>
+                        <td>
+                            <span class="status {{ chamado.status }}">
+                                {{ chamado.status }}
+                            </span>
+                        </td>
+                        <td>{{ chamado.criado_em }}</td>
+                        <td>
+                            {% if chamado.status == 'aberto' %}
+                                <form action="{{ url_for('finalizar_chamado', id_chamado=chamado.id) }}" method="POST">
+                                    <button class="botao-finalizar" type="submit">Finalizar</button>
+                                </form>
+                            {% else %}
+                                Finalizado
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8">Nenhum chamado cadastrado.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <section id="ranking">
+        <h2>Ranking dos Técnicos</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Posição</th>
+                    <th>Técnico</th>
+                    <th>Total de Chamados</th>
+                    <th>Chamados Finalizados</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for tecnico in ranking %}
+                    <tr>
+                        <td>{{ loop.index }}º</td>
+                        <td>{{ tecnico.nome }}</td>
+                        <td>{{ tecnico.total_chamados }}</td>
+                        <td>{{ tecnico.chamados_finalizados }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">Nenhum técnico cadastrado.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <section id="tecnicos">
+        <h2>Cadastrar Técnico</h2>
+
+        <form action="{{ url_for('cadastrar_tecnico') }}" method="POST">
+            <label for="nome">Nome do técnico</label>
+            <input type="text" id="nome" name="nome" placeholder="Digite o nome do técnico">
+
+            <button type="submit">Cadastrar Técnico</button>
+        </form>
+    </section>
+
+</main>
+
+<footer>
+    <p>Sistema Help Desk desenvolvido com Python, HTML, CSS e MySQL</p>
+</footer>
+
+</body>
+</html>
